@@ -1,18 +1,18 @@
 $("#btnCancelRegister").click(function () {
-    window.location.replace("index.html");
+    window.location.replace("/");
 });
 
 $("#btnCancelLogin").click(function () {
-    window.location.replace("index.html");
+    window.location.replace("/");
 });
 
 $("#btnRegisterDone").click(function () {
-    window.location.replace("index.html");
+    window.location.replace("/");
 });
 
 $("#btnLogin").click(function () {
     $('#msgLoginFailed').hide();
-    $.post("/authenticate/" + $("#login").val() + "/" + $("#password").val(), function (data, status) {
+    $.post("/user/login/" + $("#username").val() + "/" + $("#password").val(), function (data, status) {
         if (data == 'AUTHENTICATED') {
             window.location.replace("secured.html");
         } else if (data == "REQUIRE_TOKEN_CHECK") {
@@ -26,18 +26,24 @@ $("#btnLogin").click(function () {
 });
 
 $("#btnRegister").click(function () {
-    $.post("/user/register/" + $("#login").val() + "/" + $("#password").val(), function (data, status) {
+    $.post("/user/register/" + $("#username").val() + "/" + $("#password").val(), function (data, status) {
         if (status == 'success') {
-            $("#tokenQr").attr("src", "https://zxing.org/w/chart?cht=qr&chs=250x250&chld=M&choe=UTF-8&chl=otpauth://totp/2FaExample.com?secret=" + data + "&issuer=2FaExample");
+            $("#tokenQr").attr("src", "https://zxing.org/w/chart?cht=qr&chs=250x250&chld=M&choe=UTF-8&chl=otpauth://totp/worldbuild.org?secret=" + data + "&issuer=worldbuild");
             $("#tokenValue").text(data);
             $("#modalRegister").modal('show');
         }
     });
 });
 
+$("#btnLogout").click(function () {
+    $.post("/user/logout", function (data, status) {
+        window.location.replace("/")
+    });
+});
+
 $("#btnTokenVerify").click(function () {
     $('#msgTokenCheckFailed').hide();
-    $.post("/authenticate/token/" + $("#login").val() + "/" + $("#password").val() + "/" + $("#loginToken").val(), function (data, status) {
+    $.post("/user/authenticate/token/"+$("#username").val() + "/" + $("#loginToken").val(), function (data, status) {
         if (data == 'AUTHENTICATED') {
             window.location.replace("secured.html");
         } else {
@@ -45,11 +51,5 @@ $("#btnTokenVerify").click(function () {
         }
     }).fail(function(){
         $('#msgTokenCheckFailed').show();
-    });
-});
-
-$("#btnLogout").click(function () {
-    $.post("/authenticate/logout", function (data, status) {
-        window.location.replace("index.html")
     });
 });

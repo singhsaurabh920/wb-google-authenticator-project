@@ -1,4 +1,4 @@
-package org.worldbuild.google.authenticator.totp;
+package org.worldbuild.google.authenticator.utils;
 
 /**
  Copyright (c) 2011 IETF Trust and the persons identified as
@@ -10,6 +10,8 @@ package org.worldbuild.google.authenticator.totp;
  4.c of the IETF Trust's Legal Provisions Relating to IETF Documents
  (http://trustee.ietf.org/license-info).
  */
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.lang.reflect.UndeclaredThrowableException;
 import java.security.GeneralSecurityException;
@@ -30,9 +32,14 @@ import java.util.TimeZone;
  * @author Johan Rydell, PortWise, Inc.
  */
 
-public class TOTP {
+public class TOTPUtils {
 
-    private TOTP() {}
+    private TOTPUtils() {}
+
+    public static String generateSecret(int count) {
+        return RandomStringUtils.random(count, true, true).toUpperCase();
+    }
+
 
     /**
      * This method uses the JCE to provide the crypto algorithm.

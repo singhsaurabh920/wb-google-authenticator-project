@@ -1,15 +1,18 @@
 package org.worldbuild.google.authenticator.service;
 
-import org.worldbuild.google.authenticator.totp.TOTP;
+import lombok.extern.log4j.Log4j2;
+import org.worldbuild.google.authenticator.utils.TOTPUtils;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class TotpService {
+
+
     public boolean verifyCode(String totpCode, String secret) {
         String totpCodeBySecret = generateTotpBySecret(secret);
-
         return totpCodeBySecret.equals(totpCode);
     }
 
@@ -26,7 +29,7 @@ public class TotpService {
             char[] secretEncoded = (char[]) new Hex().encode(secret);
 
             // Generating TOTP by given time and secret - using TOTP algorithm implementation provided by IETF.
-            totpCodeBySecret = TOTP.generateTOTP(String.copyValueOf(secretEncoded), timeEncoded, "6");
+            totpCodeBySecret = TOTPUtils.generateTOTP(String.copyValueOf(secretEncoded), timeEncoded, "6");
         } catch (EncoderException e) {
             throw new RuntimeException(e);
         }
